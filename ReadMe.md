@@ -3,7 +3,7 @@ What would you like to do?
         id fn ln title department salary manager
         int var var var var int var
     - Add Employee
-        What is the employee's first name? What is the employee's last name? What is the employee's role? (list roles) WHo is the employee's manager? (list managers along with none) => Added __ to the database
+        What is the employee's first name? What is the employee's last name? What is the employee's role? (list roles) Who is the employee's manager? (list managers along with none) => Added __ to the database
     - Update Employee Role
         Which employee's role do you want to update? (list employee's) Which role do you want to assign the selected employee? (list roles)
     - View all Roles
