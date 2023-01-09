@@ -6,7 +6,8 @@ const inquirer = require("inquirer");
         // "express": "^4.17.1",
         // "nodemon": "^2.0.20",
 // What is "ON DELETE CASCADE" and how is it different from "ON DELETE SET NULL"? Better to use one or the other?
-inquirer.prompt([
+const choices = () => {
+    inquirer.prompt([
     {
       type: "list",
       name: "pathway",
@@ -15,30 +16,46 @@ inquirer.prompt([
        "Add Role", "View all Departments", "Add Department", "Quit"],
     }])
 
-.then((answers) => {
-    if (answers.pathway == "View all Employees") {
-        allEmp();
-    } else if (answers.pathway == "Add Employee" ) {
-        addEmp();
-    } else if (answers.pathway == "Update Employee Role") {
-        updateEmpRole();
-    } else if (answers.pathway == "View all Roles" ) {
-        allRole();
-    } else if (answers.pathway == "Add Role") {
-        addRole();
-    } else if (answers.pathway == "View all Departments" ) {
-        allDepartment();
-    } else if (answers.pathway == "Add Deparment") {
-        addDepartment();
-    } else {
-        return
-    };
-});
+    .then((answers) => {
+        if (answers.pathway == "View all Employees") {
+            allEmp();
+        } else if (answers.pathway == "Add Employee" ) {
+            addEmp();
+        } else if (answers.pathway == "Update Employee Role") {
+            updateEmpRole();
+        } else if (answers.pathway == "View all Roles" ) {
+            allRole();
+        } else if (answers.pathway == "Add Role") {
+            addRole();
+        } else if (answers.pathway == "View all Departments" ) {
+            allDepartment();
+        } else if (answers.pathway == "Add Deparment") {
+            addDepartment();
+        } else {
+            return
+        };
+    });
+};
 
 // db.query to show all of the __ table when options to view are selected
-const allEmp = () => {db.query("SELECT * FROM employee", function (err, results) {console.log(results)})};
-const allRole = () => {db.query("SELECT * FROM role", function (err, results) {console.log(results)})};
-const allDepartment = () => {db.query("SELECT * FROM department", function (err, results) {console.log(results)})};
+const allEmp = () => {
+    db.query("SELECT * FROM employee", function (err, results) {
+        console.log(results);
+        choices();
+    })
+};
+const allRole = () => {
+    db.query("SELECT * FROM role", function (err, results) {
+        console.log(results);
+        choices();
+    })
+};
+const allDepartment = () => {
+    db.query("SELECT * FROM department", function (err, results) {
+        console.log(results);
+        choices();
+    })
+};
 
 // Adding Employee
 const addEmp = () => {
@@ -82,6 +99,7 @@ const addEmp = () => {
             console.log(results);
         });
     });
+    choices();
 };
 
 // Updating Employee Role
@@ -116,6 +134,7 @@ const updateEmpRole = () => {
           console.log(results);
         });
     });
+    choices();
 };
 
 // Adding Role
@@ -154,6 +173,7 @@ const addRole = () => {
             console.log(results);
         });
     });
+    choices();
 };
 
 // Adding Department
@@ -180,4 +200,7 @@ const addDepartment = () => {
             console.log(results);
         });
     });
+    choices();
 };
+
+choices();
