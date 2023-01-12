@@ -1,6 +1,6 @@
 {
   "name": "employeeorganizer",
-  "version": "1.0.0",
+  "version": "",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^8.2.4",
     "mysql2": "^2.2.5",
-    "console.table": "^0.10.0"
+    "dotenv": "^16.0.3"
   }
 }
