@@ -1,19 +1,15 @@
 // Packages
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-// require("dotenv").config();
+require("dotenv").config();
 
 const db = mysql.createConnection(
-  // process.env.database,
-  // process.env.user,
-  // process.env.password,
   {
     host: "localhost",
     dialect: "mysql",
-    user: "root",
-    password: "",
-    database: "management_db",
-    // port: 3306,
+    user: process.env.user,
+    password: process.env.password,
+    database: process.env.database,
   }
 );
 console.log(`Connected to the management_db database.`);
