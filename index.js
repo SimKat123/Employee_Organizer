@@ -15,7 +15,7 @@ const db = mysql.createConnection(
 );
 console.log(`Connected to the management_db database.`);
 
-// prompts for the 
+// prompts for the interminal
 const choices = () => {
   inquirer
     .prompt([
@@ -60,7 +60,18 @@ const choices = () => {
 // db.query to show all of the __ table when options to view are selected
 const allEmp = () => {
   db.query(
-    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name AS department, role.salary, CONCAT (manager.first_name, ' ', manager.last_name) AS manager FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department_id JOIN employee manager ON manager.id = employee.manager_id",
+    `SELECT 
+    employee.id, 
+    employee.first_name, 
+    employee.last_name, 
+    role.title, 
+    department.department_name AS department, 
+    role.salary, 
+    CONCAT (manager.first_name, ' ', manager.last_name) AS manager 
+    FROM employee 
+    LEFT JOIN role ON employee.role_id = role.id 
+    LEFT JOIN department ON role.department_id = department.id 
+    LEFT JOIN employee manager ON manager.id = employee.manager_id`,
     function (err, results) {
       if (err) throw err;
       console.table(results);
@@ -70,7 +81,12 @@ const allEmp = () => {
 };
 const allRole = () => {
   db.query(
-    "SELECT role.id, role.title, role.salary, department.department_name AS department FROM role JOIN department ON role.department_id",
+    `SELECT
+    role.id,
+    role.title,
+    role.salary,
+    department.department_name AS department FROM role
+    JOIN department ON role.department_id = department.id`,
     function (err, results) {
       if (err) throw err;
       console.table(results);
@@ -88,6 +104,7 @@ const allDepartment = () => {
 
 // Adding Employee
 const addEmp = () => {
+  // 
   db.query("SELECT role.id, role.title FROM role", function (err, results) {
     if (err) throw err;
     const roleList = results.map((role) => {
@@ -130,9 +147,8 @@ const addEmp = () => {
               type: "list",
               name: "manager_id",
               message: "Who is the employee's manager?",
-              // How to list all managers and add none as an option?
-              choices: employeeList
-            },
+              choices: [...employeeList, "None"],
+            }
           ])
           .then((answers) => {
             const sql = `INSERT INTO employee SET ?`;
