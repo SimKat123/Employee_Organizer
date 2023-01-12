@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2");
 require("dotenv").config();
 
+// Connect to database with dotenv
 const db = mysql.createConnection(
   {
     host: "localhost",
@@ -14,6 +15,7 @@ const db = mysql.createConnection(
 );
 console.log(`Connected to the management_db database.`);
 
+// prompts for the 
 const choices = () => {
   inquirer
     .prompt([
@@ -47,7 +49,7 @@ const choices = () => {
         addRole();
       } else if (answers.pathway == "View all Departments") {
         allDepartment();
-      } else if (answers.pathway == "Add Deparment") {
+      } else if (answers.pathway == "Add Department") {
         addDepartment();
       } else {
         return;
@@ -88,16 +90,24 @@ const allDepartment = () => {
 const addEmp = () => {
   db.query("SELECT role.id, role.title FROM role", function (err, results) {
     if (err) throw err;
-    const roleList = results.map((role) => role.id + ". " + role.title);
+    const roleList = results.map((role) => {
+      return {
+        name: role.title,
+        value: role.id,
+      };
+    });
 
     db.query(
       "SELECT employee.id, employee.first_name, employee.last_name FROM employee",
       function (err, results) {
         if (err) throw err;
-        const employeeList = results.map(
-          (employee) =>
-            employee.id + ". " + employee.first_name + " " + employee.last_name
-        );
+        const employeeList = results.map((employee) => {
+          return {
+            name: employee.first_name + " " + employee.last_name,
+            value: employee.id,
+          };
+        });
+
         inquirer
           .prompt([
             {
@@ -125,21 +135,11 @@ const addEmp = () => {
             },
           ])
           .then((answers) => {
-            const sql = `INSERT INTO employee VALUES (?)`;
-            // Are the params correct??
-            const params = [
-              answers.first_name,
-              answers.last_name,
-              answers.role_id,
-              answers.manager_id,
-            ];
-
-            db.query(sql, params, function (err, results) {
+            const sql = `INSERT INTO employee SET ?`;
+            db.query(sql, answers, function (err, results) {
               if (err) throw err;
-              console.table(results);
               console.log(
-                `Added ${answers.first_name} ${answers.last_name} to database`
-              );
+                `Added ${answers.first_name} ${answers.last_name} to database`);
               choices();
             });
           });
@@ -152,16 +152,23 @@ const addEmp = () => {
 const updateEmpRole = () => {
   db.query("SELECT role.id, role.title FROM role", function (err, results) {
     if (err) throw err;
-    const roleList = results.map((role) => role.id + ". " + role.title);
+    const roleList = results.map((role) => {
+      return {
+        name: role.title,
+        value: role.id,
+      };
+    });
 
     db.query(
       "SELECT employee.id, employee.first_name, employee.last_name FROM employee",
       function (err, results) {
         if (err) throw err;
-        const employeeList = results.map(
-          (employee) =>
-            employee.id + ". " + employee.first_name + " " + employee.last_name
-        );
+        const employeeList = results.map((employee) => {
+          return {
+            name: employee.first_name + " " + employee.last_name,
+            value: employee.id,
+          };
+        });
 
         inquirer
           .prompt([
@@ -180,13 +187,9 @@ const updateEmpRole = () => {
             },
           ])
           .then((answers) => {
-            const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
-            // Are the params correct? Does answers.emp_name, update where it is supposed to? the first and last name spot?
-            const params = [answers.role, answers.emp_name];
-
-            db.query(sql, params, function (err, results) {
+            const sql = `UPDATE employee SET ?`;
+            db.query(sql, answers, function (err, results) {
               if (err) throw err;
-              console.table(results);
               console.log(`Added ${answers.department_name} to database`);
               choices();
             });
@@ -200,7 +203,13 @@ const updateEmpRole = () => {
 const addRole = () => {
   db.query("SELECT * FROM department", function (err, results) {
     if (err) throw err;
-    const departmentList = results.map((department) => department.id + ". " + department.department_name);
+    const departmentList = results.map((department) => {
+      return {
+        name: department.department_name,
+        value: department.id,
+      };
+    });
+
     inquirer
       .prompt([
         {
@@ -221,12 +230,9 @@ const addRole = () => {
         },
       ])
       .then((answers) => {
-        const sql = `INSERT INTO role (title, salary, department_id) VALUES (?)`;
-        const params = [answers.title, answers.salary, answers.department_id];
-
-        db.query(sql, params, function (err, results) {
+        const sql = `INSERT INTO role SET ?`;
+        db.query(sql, answers, function (err, results) {
           if (err) throw err;
-          console.table(results);
           console.log(`Added ${answers.title} to database`);
           choices();
         });
@@ -240,18 +246,15 @@ const addDepartment = () => {
     .prompt([
       {
         type: "input",
-        name: "title",
+        name: "department_name",
         message: "What is the name of the department?",
       },
     ])
     .then((answers) => {
-      const sql = `INSERT INTO department (department_name) VALUES (?)`;
-      const params = answers;
-
-      db.query(sql, params, function (err, results) {
+      const sql = `INSERT INTO department SET ?`;
+      db.query(sql, answers, function (err, results) {
         if (err) throw err;
-        console.table(results);
-        console.log(`Added ${answers.department_name} to database`);
+        console.log(`Added ${answers} to database`);
         choices();
       });
     });
