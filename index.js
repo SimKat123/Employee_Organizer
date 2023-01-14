@@ -4,15 +4,13 @@ const mysql = require("mysql2");
 require("dotenv").config();
 
 // Connect to database with dotenv
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    dialect: "mysql",
-    user: process.env.user,
-    password: process.env.password,
-    database: process.env.database,
-  }
-);
+const db = mysql.createConnection({
+  host: "localhost",
+  dialect: "mysql",
+  user: process.env.user,
+  password: process.env.password,
+  database: process.env.database,
+});
 console.log(`Connected to the management_db database.`);
 
 // prompts for the interminal
@@ -104,7 +102,7 @@ const allDepartment = () => {
 
 // Adding Employee
 const addEmp = () => {
-  // 
+  //
   db.query("SELECT role.id, role.title FROM role", function (err, results) {
     if (err) throw err;
     const roleList = results.map((role) => {
@@ -147,15 +145,16 @@ const addEmp = () => {
               type: "list",
               name: "manager_id",
               message: "Who is the employee's manager?",
-              choices: [...employeeList, "None"],
-            }
+              choices: employeeList,
+            },
           ])
           .then((answers) => {
             const sql = `INSERT INTO employee SET ?`;
             db.query(sql, answers, function (err, results) {
               if (err) throw err;
               console.log(
-                `Added ${answers.first_name} ${answers.last_name} to database`);
+                `Added ${answers.first_name} ${answers.last_name} to database`
+              );
               choices();
             });
           });
@@ -203,8 +202,19 @@ const updateEmpRole = () => {
             },
           ])
           .then((answers) => {
-            const sql = `UPDATE employee SET ?`;
-            db.query(sql, answers, function (err, results) {
+            for (let i = 0; i < employeeList.length; i++) {
+              if (employeeList[i].value == answers.emp_name) {
+                empName = employeeList[i].value;
+              }
+            }
+            for (let i = 0; i < roleList.length; i++) {
+              if (roleList[i].value == answers.role) {
+                role_id = roleList[i].value;
+              }
+            }
+
+            const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+            db.query(sql, [empName, role_id], function (err, results) {
               if (err) throw err;
               console.log(`Added ${answers.department_name} to database`);
               choices();
