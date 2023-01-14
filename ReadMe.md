@@ -16,9 +16,9 @@ An Employee Organizer that uses a management database to oragnize employees base
 To install the necessary dependencies, run the following command: npm i
 
 ## Usage
-Create a .env file with the management database, the user, and password to access mysql. Source the schema and seeds file through sql then run the index.js file using node in the terminal to use the employee organizer.
+Create a .env file with the management database, the user, and password to access mysql. Source the schema (need to source the schema.sql file twice) and seeds file through sql then run the index.js file using node in the terminal to use the employee organizer.
 
-Here is a [video](https://drive.google.com/file/d/1ayEw6LrCakySytyVA1HCiZWYCsS6Ljwt/view) demonstrating the steps to use this Organizer.
+Here is a [video](https://drive.google.com/file/d/1ob-sXvV5wGKqulR3Kk_xHF9e9XCVm4CR/view?usp=share_link) demonstrating the steps to use this Organizer.
 
 ## License
 This project is licensed under the MIT license.

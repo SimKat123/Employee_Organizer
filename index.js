@@ -201,7 +201,6 @@ const updateEmpRole = () => {
             },
           ])
           .then((answers) => {
-            console.log(answers.emp_name, answers.role, 'users input')
             let empName, role_id;
             for (let i = 0; i < employeeList.length; i++) {
               if (employeeList[i].value == answers.emp_name) {
