@@ -184,7 +184,6 @@ const updateEmpRole = () => {
             value: employee.id,
           };
         });
-
         inquirer
           .prompt([
             {
@@ -202,6 +201,8 @@ const updateEmpRole = () => {
             },
           ])
           .then((answers) => {
+            console.log(answers.emp_name, answers.role, 'users input')
+            let empName, role_id;
             for (let i = 0; i < employeeList.length; i++) {
               if (employeeList[i].value == answers.emp_name) {
                 empName = employeeList[i].value;
@@ -212,11 +213,10 @@ const updateEmpRole = () => {
                 role_id = roleList[i].value;
               }
             }
-
             const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
-            db.query(sql, [empName, role_id], function (err, results) {
+            db.query(sql, [role_id, empName], function (err, results) {
               if (err) throw err;
-              console.log(`Added ${answers.department_name} to database`);
+              console.log(`Employe's role has been changed`);
               choices();
             });
           });
